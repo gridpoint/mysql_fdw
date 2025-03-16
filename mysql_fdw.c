@@ -1165,13 +1165,11 @@ mysql_is_column_unique(Oid foreigntableid)
 		mysql_error_print(conn);
 
 	result = mysql_store_result(conn);
-	if (result)
+	if (result && mysql_num_fields(result) > 3)
 	{
-		int			num_fields = mysql_num_fields(result);
 		MYSQL_ROW	row;
 
-		row = mysql_fetch_row(result);
-		if (row && num_fields > 3)
+		while ((row = mysql_fetch_row(result)))
 		{
 			if ((strcmp(row[3], "PRI") == 0) || (strcmp(row[3], "UNI")) == 0)
 			{
